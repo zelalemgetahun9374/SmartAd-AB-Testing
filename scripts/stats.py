@@ -103,3 +103,11 @@ def p_val(N_A, N_B, p_A, d_hat):
     z_score = (d_hat) / np.sqrt(std_a**2 + std_b**2)
     return scs.norm().sf(z_score)
     # return scs.binom(N_A, p_A).pmf(p_B * N_B)
+
+def min_sample_size(bcr, mde, power=0.8, sig_level=0.05):
+    standard_norm = scs.norm(0, 1)
+    Z_beta = standard_norm.ppf(power)
+    Z_alpha = standard_norm.ppf(1-sig_level/2)
+    pooled_prob = (bcr + bcr+mde) / 2
+    min_N = (2 * pooled_prob * (1 - pooled_prob) * (Z_beta + Z_alpha)**2/ mde**2)
+    return min_N
